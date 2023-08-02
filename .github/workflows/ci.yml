@@ -1,16 +1,25 @@
-name: C++ Build with CMake
+name: C++ Build with CMake and MinGW
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main  # Adjust this to your main branch name
+  pull_request:
 
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install CMake and MinGW
+        run: |
+          choco install cmake -y
+          choco install mingw -y
+          refreshenv
+
       - name: Configure CMake
-        env:
-          CC: gcc
-          CXX: g++
         run: cmake -G "MinGW Makefiles" -S . -B build
 
       - name: Build
